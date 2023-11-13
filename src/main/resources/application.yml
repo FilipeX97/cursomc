@@ -1,1 +1,13 @@
 # Alterar a porta: server.port: 8081
+
+# Dados do banco
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+  
+  jpa:
+    show-sql: true
+    properties.hibernate.format_sql: true
+  
