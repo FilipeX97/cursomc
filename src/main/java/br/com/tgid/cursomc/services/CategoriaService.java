@@ -1,5 +1,6 @@
 package br.com.tgid.cursomc.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import br.com.tgid.cursomc.domain.Categoria;
+import br.com.tgid.cursomc.dto.CategoriaDTO;
 import br.com.tgid.cursomc.repositories.CategoriaRepository;
 import br.com.tgid.cursomc.services.exceptions.DataIntegrityException;
 import br.com.tgid.cursomc.services.exceptions.ObjectNotFoundException;
@@ -40,6 +42,10 @@ public class CategoriaService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos");
 		}
+	}
+
+	public List<CategoriaDTO> findAll() {
+		return repository.findAll().stream().map(x -> new CategoriaDTO(x)).toList();
 	}
 	
 
