@@ -10,4 +10,8 @@ spring:
   jpa:
     show-sql: true
     properties.hibernate.format_sql: true
+    
+default:
+  sender: filipe.xavier1928@gmail.com
+  recipient: filipe.xavier1928@gmail.com
   
