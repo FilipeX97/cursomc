@@ -2,6 +2,7 @@ package br.com.tgid.cursomc.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -49,7 +50,7 @@ public class CategoriaService {
 	}
 
 	public List<CategoriaDTO> findAll() {
-		return repository.findAll().stream().map(x -> new CategoriaDTO(x)).toList();
+		return repository.findAll().stream().map(x -> new CategoriaDTO(x)).collect(Collectors.toList());
 	}
 	
 	public Page<CategoriaDTO> findPage(Integer page, Integer linesPorPage, String orderBy, String direction) {
