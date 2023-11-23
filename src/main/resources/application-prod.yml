@@ -2,9 +2,10 @@ spring:
 
   # Configurações do banco de dados
   datasource:
-    url: jdbc:mysql://localhost:3306/curso_spring
-    username: root
-    password:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate.ddl-auto: update
@@ -13,14 +14,14 @@ spring:
   
   # Configurações de envio de e-mail
   mail:
-    host: 
-    username: 
-    password: 
+    host: ${EMAIL_HOST}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
     
     properties.mail.smtp:
       auth: true
       socketFactory:
-        port: 
+        port: ${EMAIL_PORT}
         class: javax.net.ssl.SSLSocketFactory
         fallback: false
       
