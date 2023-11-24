@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import br.com.tgid.cursomc.domain.Endereco;
 import br.com.tgid.cursomc.domain.enums.TipoCliente;
 import br.com.tgid.cursomc.dto.ClienteDTO;
 import br.com.tgid.cursomc.dto.ClienteNewDTO;
+import br.com.tgid.cursomc.repositories.CidadeRepository;
 import br.com.tgid.cursomc.repositories.ClienteRepository;
 import br.com.tgid.cursomc.repositories.EnderecoRepository;
 import br.com.tgid.cursomc.services.exceptions.DataIntegrityException;
@@ -27,7 +29,13 @@ import br.com.tgid.cursomc.services.exceptions.ObjectNotFoundException;
 public class ClienteService {
 	
 	@Autowired
+	private BCryptPasswordEncoder pe;
+	
+	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private CidadeRepository cidadeRepository;
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
@@ -71,12 +79,12 @@ public class ClienteService {
 	}
 	
 	public Cliente fromDTO(ClienteDTO objDTO) {
-		return new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getEmail(), null, null);
+		return new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getEmail(), null, null, null);
 	}
 	
 	public Cliente fromDTO(ClienteNewDTO objDTO) {
-		Cliente cli = new Cliente(null, objDTO.getNome(), objDTO.getEmail(), objDTO.getCpfOuCnpj(), TipoCliente.toEnum(objDTO.getTipo()));
-		Cidade cid = new Cidade(objDTO.getCidadeId(), null, null);
+		Cliente cli = new Cliente(null, objDTO.getNome(), objDTO.getEmail(), objDTO.getCpfOuCnpj(), TipoCliente.toEnum(objDTO.getTipo()), pe.encode(objDTO.getSenha()));
+		Cidade cid = cidadeRepository.findById(objDTO.getCidadeId()).orElse(null);
 		Endereco end = new Endereco(null, objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(), objDTO.getBairro(), objDTO.getCep(), cli, cid);
 		cli.getEnderecos().add(end);
 		cli.getTelefones().add(objDTO.getTelefone1());
