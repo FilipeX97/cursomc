@@ -7,10 +7,13 @@ spring:
     username: sa
     password:
   
+  profiles:
+    active: test  
+  
   jpa:
     show-sql: true
     properties.hibernate.format_sql: true
   
 default:
-  sender: ${EMAIL_USERNAME}
-  recipient: ${EMAIL_USERNAME} 
+  sender: teste@teste.com
+  recipient: teste@teste.com
