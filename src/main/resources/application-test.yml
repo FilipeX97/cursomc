@@ -11,3 +11,18 @@ spring:
     show-sql: true
     properties.hibernate.format_sql: true
   
+  # Configurações de envio de e-mail
+  mail:
+    host: 
+    username: 
+    password: 
+    
+    properties.mail.smtp:
+      auth: true
+      socketFactory:
+        port: 
+        class: javax.net.ssl.SSLSocketFactory
+        fallback: false
+      
+      starttls.enable: true
+      ssl.enable: true
