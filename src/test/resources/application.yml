@@ -13,4 +13,4 @@ spring:
   
 default:
   sender: ${EMAIL_USERNAME}
-  recipient: ${EMAIL_USERNAME}
+  recipient: ${EMAIL_USERNAME} 
