@@ -9,22 +9,41 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.com.tgid.cursomc.resources.exception.StandardError;
+import br.com.tgid.cursomc.security.JWTAuthenticationFilter;
+import br.com.tgid.cursomc.security.JWTUtil;
+
 @Configuration
 public class SecurityConfig {
 
 	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**" };
 	private static final String[] PUBLIC_MATCHERS_GET = { "/produtos/**", "/categorias/**" };
+	
+	@Autowired
+	private AuthenticationConfiguration configuration;
 
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private JWTUtil jwtUtil;
 	
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -44,10 +63,18 @@ public class SecurityConfig {
             .and()
             // Forma para conseguir retornar 401 por enquanto
             .exceptionHandling(handling -> 
-            	handling.authenticationEntryPoint((request, response, authException) -> 
-            		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
-        		)
+            	handling.authenticationEntryPoint((request, response, authException) -> {
+            		StandardError standardError = new StandardError(
+                            HttpServletResponse.SC_UNAUTHORIZED,
+                            "Acesso não autorizado",
+                            System.currentTimeMillis());
+
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write(new ObjectMapper().writeValueAsString(standardError));
+            	})
         	);
+        http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
         // Utilizado para assegurar que o backend não vai criar sessão de usuário
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); 
 		return http.build();
@@ -63,9 +90,20 @@ public class SecurityConfig {
 		return source;
 	}
 	
+	@Autowired
+    void configure(AuthenticationManagerBuilder builder) throws Exception {
+        builder.userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder());
+    }
+	
 	@Bean
 	BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
+	@Bean
+    AuthenticationManager authenticationManager() throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
 }

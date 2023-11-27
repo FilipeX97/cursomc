@@ -32,3 +32,6 @@ spring:
 default:
   sender: teste@teste.com
   recipient: teste@teste.com
+  
+jwt.secret: teste
+jwt.expiration: 60000
