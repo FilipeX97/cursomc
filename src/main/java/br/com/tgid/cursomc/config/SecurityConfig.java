@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.tgid.cursomc.resources.exception.StandardError;
 import br.com.tgid.cursomc.security.JWTAuthenticationFilter;
+import br.com.tgid.cursomc.security.JWTAuthorizationFilter;
 import br.com.tgid.cursomc.security.JWTUtil;
 
 @Configuration
@@ -75,6 +76,7 @@ public class SecurityConfig {
             	})
         	);
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
         // Utilizado para assegurar que o backend não vai criar sessão de usuário
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); 
 		return http.build();
