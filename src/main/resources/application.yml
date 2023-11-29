@@ -9,3 +9,7 @@ default:
 # Sequencia De Caracteres Para Assinar Token
 jwt.secret: ${JWT_SECRET}
 jwt.expiration: 60000
+
+dropbox.acess:
+  token: ${DROPBOX_TOKEN}
+  folder_name: ${DROPBOX_FOLDER_NAME}
