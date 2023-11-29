@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.com.tgid.cursomc.services.exceptions.AuthorizationException;
 import br.com.tgid.cursomc.services.exceptions.DataIntegrityException;
+import br.com.tgid.cursomc.services.exceptions.FileException;
 import br.com.tgid.cursomc.services.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice
@@ -43,6 +44,12 @@ public class ResourceExceptionHandler {
 	public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest request) {
 		StandardError err = new StandardError(HttpStatus.UNAUTHORIZED.value(), e.getMessage(), System.currentTimeMillis());
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+	}
+	
+	@ExceptionHandler(FileException.class)
+	public ResponseEntity<StandardError> file(FileException e, HttpServletRequest request) {
+		StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
 
 }
