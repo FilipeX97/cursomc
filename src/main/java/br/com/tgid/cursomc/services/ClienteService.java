@@ -57,6 +57,9 @@ public class ClienteService {
 	@Value("${img.prefix.client.profile}")
 	private String prefix;
 	
+	@Value("${img.profile.size}")
+	private Integer size;
+	
 	public Cliente find(Integer id) {
 		
 		UserSS user = UserService.authenticated();
@@ -130,10 +133,12 @@ public class ClienteService {
 			throw new AuthorizationException("Acesso negado");
 		
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
-		String fileName = prefix + user.getId() + ".jpg";
-		InputStream is = imageService.getInputStream(jpgImage, "jpg");
+		jpgImage = imageService.cropSquare(jpgImage);
+		jpgImage = imageService.resize(jpgImage, size);
 		
-		return dropboxService.uploadFile(is, fileName);
+		String fileName = prefix + user.getId() + ".jpg";
+		
+		return dropboxService.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName);
 	}
 
 }

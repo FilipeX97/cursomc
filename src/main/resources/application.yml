@@ -17,3 +17,4 @@ dropbox.acess:
   
 # prefixo para identificação de imagem de cliente
 img.prefix.client.profile: cp
+img.profile.size: 200
