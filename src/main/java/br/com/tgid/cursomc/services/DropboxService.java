@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,9 @@ public class DropboxService {
 
 	@Autowired
 	private DbxClientV2 dbxClient;
+	
+	@Value("${dropbox.acess.folder_name}")
+	private String folder_name;
 
 	// Método para enviar por path do arquivov
 //	public void uploadFile(String filePath) {
@@ -60,7 +64,7 @@ public class DropboxService {
 		try {
 			LOG.info("Iniciando upload");
 			FileMetadata metadata = dbxClient.files()
-					.uploadBuilder("/"+fileName)
+					.uploadBuilder("/"+"Aplicativos"+"/"+folder_name+"/"+fileName)
 					.withAutorename(true)
 					.withMode(WriteMode.ADD)
 					.uploadAndFinish(is);
