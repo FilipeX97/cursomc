@@ -10,6 +10,10 @@ default:
 jwt.secret: ${JWT_SECRET}
 jwt.expiration: 60000
 
+# Acesso ao aplicativo do dropbox
 dropbox.acess:
   token: ${DROPBOX_TOKEN}
   folder_name: ${DROPBOX_FOLDER_NAME}
+  
+# prefixo para identificação de imagem de cliente
+img.prefix.client.profile: cp
