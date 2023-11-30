@@ -116,7 +116,17 @@ public class ClienteService {
 	}
 	
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		return dropboxService.uploadFile(multipartFile);
+		UserSS user = UserService.authenticated();
+		if(user == null)
+			throw new AuthorizationException("Acesso negado");
+		
+		URI uri = dropboxService.uploadFile(multipartFile);
+		
+		Cliente cli = find(user.getId());
+		cli.setImageUrl(uri.toString());
+		clienteRepository.save(cli);
+		
+		return uri;
 	}
 
 }

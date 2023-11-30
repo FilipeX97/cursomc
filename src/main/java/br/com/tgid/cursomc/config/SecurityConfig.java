@@ -49,7 +49,7 @@ public class SecurityConfig {
 
 	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**" };
 	private static final String[] PUBLIC_MATCHERS_GET = { "/produtos/**", "/categorias/**" };
-	private static final String[] PUBLIC_MATCHERS_POST = { "/clientes", "/clientes/picture", "/auth/forgot/**" };
+	private static final String[] PUBLIC_MATCHERS_POST = { "/clientes", "/auth/forgot/**" };
 	
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
