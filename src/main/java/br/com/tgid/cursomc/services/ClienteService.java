@@ -1,7 +1,6 @@
 package br.com.tgid.cursomc.services;
 
 import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;

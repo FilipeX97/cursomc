@@ -27,10 +27,11 @@ public class AuthResource {
 	private AuthService authService;
 	
 	@PostMapping("/refresh_token")
-	public ResponseEntity<Void> refreshToken(HttpServletResponse reponse) {
+	public ResponseEntity<Void> refreshToken(HttpServletResponse response) {
 		UserSS user = UserService.authenticated();
 		String token = jwtUtil.generateToken(user.getUsername());
-		reponse.addHeader("Authorization", "Bearer " + token);
+		response.addHeader("Authorization", "Bearer " + token);
+		response.addHeader("access-control-expose-headers", "Authorization");
 		return ResponseEntity.noContent().build();
 	}
 	
