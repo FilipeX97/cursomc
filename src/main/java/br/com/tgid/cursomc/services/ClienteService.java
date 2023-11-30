@@ -1,11 +1,14 @@
 package br.com.tgid.cursomc.services;
 
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +50,12 @@ public class ClienteService {
 	
 	@Autowired
 	private DropboxService dropboxService;
+	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
 	
 	public Cliente find(Integer id) {
 		
@@ -120,13 +129,11 @@ public class ClienteService {
 		if(user == null)
 			throw new AuthorizationException("Acesso negado");
 		
-		URI uri = dropboxService.uploadFile(multipartFile);
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+		String fileName = prefix + user.getId() + ".jpg";
+		InputStream is = imageService.getInputStream(jpgImage, "jpg");
 		
-		Cliente cli = find(user.getId());
-		cli.setImageUrl(uri.toString());
-		clienteRepository.save(cli);
-		
-		return uri;
+		return dropboxService.uploadFile(is, fileName);
 	}
 
 }
