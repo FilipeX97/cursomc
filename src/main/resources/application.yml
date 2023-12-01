@@ -6,12 +6,16 @@ spring:
     max-file-size: 10MB
     max-request-size: 10MB
     
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+    
 default:
   sender: ${EMAIL_USERNAME}
   recipient: ${EMAIL_USERNAME}
 
 # Sequencia De Caracteres Para Assinar Token
-jwt.secret:  ${JWT_SECRET}
+jwt.secret: ${JWT_SECRET}
 jwt.expiration: 86400000
 
 # Acesso ao aplicativo do dropbox
