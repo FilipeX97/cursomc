@@ -2,8 +2,6 @@ package br.com.tgid.cursomc.config;
 
 import java.util.Arrays;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +21,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import br.com.tgid.cursomc.resources.exception.StandardError;
 import br.com.tgid.cursomc.security.JWTAuthenticationFilter;
 import br.com.tgid.cursomc.security.JWTAuthorizationFilter;
 import br.com.tgid.cursomc.security.JWTUtil;
@@ -67,20 +62,20 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
             .antMatchers(PUBLIC_MATCHERS).permitAll()
             .anyRequest().authenticated()
-            .and()
-            // Forma para conseguir retornar 401 por enquanto
-            .exceptionHandling(handling -> 
-            	handling.authenticationEntryPoint((request, response, authException) -> {
-            		StandardError standardError = new StandardError(
-                            HttpServletResponse.SC_UNAUTHORIZED,
-                            "Acesso não autorizado",
-                            System.currentTimeMillis());
-
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.setContentType("application/json");
-                    response.getWriter().write(new ObjectMapper().writeValueAsString(standardError));
-            	})
-        	);
+            .and();
+//            // Forma para conseguir retornar 401 por enquanto
+//            .exceptionHandling(handling -> 
+//            	handling.authenticationEntryPoint((request, response, authException) -> {
+//            		StandardError standardError = new StandardError(
+//                            HttpServletResponse.SC_UNAUTHORIZED,
+//                            "Acesso não autorizado",
+//                            System.currentTimeMillis());
+//
+//                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                    response.setContentType("application/json");
+//                    response.getWriter().write(new ObjectMapper().writeValueAsString(standardError));
+//            	})
+//        	);
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
         // Utilizado para assegurar que o backend não vai criar sessão de usuário
